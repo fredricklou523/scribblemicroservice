@@ -6,8 +6,6 @@ var io = require("socket.io")(http);
 
 app.use(express.static(path.join(__dirname, "../dist")));
 
-let interval;
-
 const getApiAndEmit = (socket) => {
   const response = new Date();
   // Emitting a new message. Will be consumed by the client
@@ -15,14 +13,24 @@ const getApiAndEmit = (socket) => {
 };
 
 io.on("connection", (socket) => {
-  if (interval) {
-    clearInterval(interval);
-  }
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-    clearInterval(interval);
+  console.log("New client connected");
+
+  socket.on("joinLobby", function (lobbyName) {
+    socket.join(lobbyName, () => {
+      let lobbies = Object.keys(socket.rooms);
+      // console.log(lobbies);
+      io.to(lobbyName).emit("message", "a new user has joined the room");
+    });
   });
+
+  // if (interval) {
+  //   clearInterval(interval);
+  // }
+  // interval = setInterval(() => getApiAndEmit(socket), 1000);
+  // socket.on("disconnect", () => {
+  //   console.log("Client disconnected");
+  //   clearInterval(interval);
+  // });
 
   // console.log("a user connected ", socket.id);
 

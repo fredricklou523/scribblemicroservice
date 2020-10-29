@@ -9,7 +9,7 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route exact path="/" component={CreateLobby} />
-          <Route path="/:id" children={<GameLobby />} />
+          <Route path="/:lobbyName" children={<GameLobby />} />
         </Switch>
       </Router>
     );
