@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:watch": "webpack -w",
-    "server:watch": "nodemon ./server/index.js"
+    "build:dev": "webpack -w",
+    "clientServer:dev": "nodemon ./clientServer/index.js",
+    "scribbleServer:dev": "nodemon ./scribbleServer/index.js"
   },
   "author": "",
   "license": "ISC",

@@ -23,17 +23,6 @@ io.on("connection", (socket) => {
     });
   });
 
-  // if (interval) {
-  //   clearInterval(interval);
-  // }
-  // interval = setInterval(() => getApiAndEmit(socket), 1000);
-  // socket.on("disconnect", () => {
-  //   console.log("Client disconnected");
-  //   clearInterval(interval);
-  // });
-
-  // console.log("a user connected ", socket.id);
-
   // socket.join("Fred's Room", () => {
   //   let rooms = Object.keys(socket.rooms);
   //   console.log(rooms);
