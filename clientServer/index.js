@@ -1,37 +1,29 @@
-var express = require("express");
-var app = express();
-var http = require("http").createServer(app);
-var path = require("path");
-var io = require("socket.io")(http);
+const path = require("path");
+const { http, io, app, express } = require("./socket");
+const { Lobby } = require("../lib");
+const Events = require("../lib/enums/events");
 
 app.use(express.static(path.join(__dirname, "../dist")));
 
-const getApiAndEmit = (socket) => {
-  const response = new Date();
-  // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-};
+const lobbies = {};
 
 io.on("connection", (socket) => {
   console.log("New client connected");
 
-  socket.on("joinLobby", function (lobbyName) {
+  socket.on(Events.JOIN_LOBBY, function (options) {
+    const { lobbyName, userName } = options;
+    const userId = socket.id;
+    if (!socket.adapter.rooms[lobbyName]) {
+      console.log("new Lobby");
+      lobbies[lobbyName] = new Lobby(lobbyName, io);
+    }
     socket.join(lobbyName, () => {
-      let lobbies = Object.keys(socket.rooms);
-      // console.log(lobbies);
-      io.to(lobbyName).emit("message", "a new user has joined the room");
+      const currentLobby = lobbies[lobbyName];
+      currentLobby.addUser({ userName, userId });
     });
   });
 
-  // socket.join("Fred's Room", () => {
-  //   let rooms = Object.keys(socket.rooms);
-  //   console.log(rooms);
-  //   io.to("room 237").emit("a new user has joined the room");
-  //   socket.on("mouse", function (data) {
-  //     console.log("Received: 'mouse' " + data.x + " " + data.y);
-  //     socket.broadcast.emit("mouse", data);
-  //   });
-  // });
+  socket.on(Events.START_ROUND, function () {});
 });
 
 http.listen(3000, () => {

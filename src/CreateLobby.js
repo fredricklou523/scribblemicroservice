@@ -14,7 +14,7 @@ function CreateLobby() {
             onChange={(e) => updateLobbyName(e.target.value)}
           />
           <Link to={lobbyName}>
-            <input type="submit" />
+            <input type="submit" value="Create Lobby" />
           </Link>
         </label>
       </form>
